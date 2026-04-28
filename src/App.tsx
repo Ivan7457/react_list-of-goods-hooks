@@ -2,6 +2,12 @@ import React, { useState } from 'react';
 import 'bulma/css/bulma.css';
 import './App.scss';
 
+enum SortType {
+  Alphabet = 'alphabet',
+  Length = 'length',
+  None = '',
+}
+
 export const goodsFromServer = [
   'Dumplings',
   'Carrot',
@@ -18,9 +24,6 @@ export const goodsFromServer = [
 type Props = {
   goods: string[];
 };
-
-const SORT_ALPHABET = 'alphabet';
-const SORT_LENGTH = 'length';
 
 const GoodList: React.FC<Props> = ({ goods }) => {
   return (
@@ -43,10 +46,10 @@ function getPreparedGoods(
   if (sortField) {
     preparedGoods.sort((good1, good2) => {
       switch (sortField) {
-        case SORT_ALPHABET:
+        case SortType.Alphabet:
           return good1.localeCompare(good2);
 
-        case SORT_LENGTH:
+        case SortType.Length:
           return good1.length - good2.length;
 
         default:
@@ -64,7 +67,7 @@ function getPreparedGoods(
 
 export const App: React.FC = () => {
   const initialGoods = [...goodsFromServer];
-  const [sortField, setSortField] = useState('');
+  const [sortField, setSortField] = useState(SortType.None);
   const [reversed, setReversed] = useState(false);
   const prepared = getPreparedGoods(initialGoods, { sortField, reversed });
 
@@ -73,16 +76,16 @@ export const App: React.FC = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortField === SORT_ALPHABET ? '' : 'is-light'}`}
-          onClick={() => setSortField(SORT_ALPHABET)}
+          className={`button is-info ${sortField === SortType.Alphabet ? '' : 'is-light'}`}
+          onClick={() => setSortField(SortType.Alphabet)}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={`button is-info ${sortField === SORT_LENGTH ? '' : 'is-light'}`}
-          onClick={() => setSortField(SORT_LENGTH)}
+          className={`button is-info ${sortField === SortType.Length ? '' : 'is-light'}`}
+          onClick={() => setSortField(SortType.Length)}
         >
           Sort by length
         </button>
@@ -100,7 +103,7 @@ export const App: React.FC = () => {
             type="button"
             className="button is-danger is-light"
             onClick={() => {
-              setSortField('');
+              setSortField(SortType.None);
               setReversed(false);
             }}
           >
