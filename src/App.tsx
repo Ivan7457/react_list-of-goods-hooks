@@ -5,6 +5,7 @@ import './App.scss';
 enum SortType {
   Alphabet = 'alphabet',
   Length = 'length',
+  Numeric = 'numeric',
   None = '',
 }
 
@@ -39,7 +40,7 @@ const GoodList: React.FC<Props> = ({ goods }) => {
 
 function getPreparedGoods(
   goods: string[],
-  { sortField, reversed }: { sortField: string; reversed: boolean },
+  { sortField, reversed }: { sortField: SortType; reversed: boolean },
 ) {
   const preparedGoods = [...goods];
 
@@ -51,6 +52,9 @@ function getPreparedGoods(
 
         case SortType.Length:
           return good1.length - good2.length;
+
+        case SortType.Numeric:
+          return (Number(good1) || 0) - (Number(good2) || 0);
 
         default:
           return 0;
